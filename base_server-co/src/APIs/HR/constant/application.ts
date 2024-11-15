@@ -1,0 +1,2 @@
+// src/constant/application.ts
+export const JWT_SECRET = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzA3NzcwODdkMmRhYjdmNmEyM2I1OWQiLCJlbWFpbCI6ImpvaG5kb0BleGFtcGxlLmNvbSIsImlhdCI6MTcyODU0MjQ5NiwiZXhwIjoxNzI4NTQ2MDk2fQ.fTCuQ90kCfKWuVHcWKrRPOHyZ6gP-YtbH5IoWATxAms'; // Replace with your actual secret key
