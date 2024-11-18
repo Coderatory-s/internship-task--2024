@@ -1,8 +1,11 @@
+import Friends from '@/components/Friends'
 import React from 'react'
 
 const friends = () => {
   return (
-    <div>friend</div>
+    <div>
+      <Friends/>
+    </div>
   )
 }
 

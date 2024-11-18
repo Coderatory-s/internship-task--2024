@@ -145340,3 +145340,91 @@
         "SERVER_URL": "http://localhost:3000"
     }
 }
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:32:17.570Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:32:17.597Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:32:17.600Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:57:37.619Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:57:37.639Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:57:37.643Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T01:07:00.343Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T01:07:00.360Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T01:07:00.366Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T02:27:59.296Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T02:27:59.325Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T02:27:59.332Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}

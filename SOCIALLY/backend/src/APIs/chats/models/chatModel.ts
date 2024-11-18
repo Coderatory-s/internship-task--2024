@@ -21,21 +21,3 @@ const ChatSchema: Schema = new Schema(
 )
 
 export const ChatModel = mongoose.model<IChat>('Chat', ChatSchema)
-
-// models/messageModel.ts
-
-export interface IMessage extends Document {
-    chatId: string // Reference to the chat
-    sender: string // User ID of the sender
-    message: string
-    timestamp: Date
-}
-
-const MessageSchema: Schema = new Schema({
-    chatId: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
-    sender: { type: String, required: true },
-    message: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now }
-})
-
-export const MessageModel = mongoose.model<IMessage>('Message', MessageSchema)

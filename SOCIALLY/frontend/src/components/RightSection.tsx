@@ -2945,177 +2945,151 @@
 // };
 
 // export default RightSection;
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { IoSearch } from 'react-icons/io5';
-import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogHeader } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import useSocket from '@/hooks/useSocket';
+import { useState } from "react";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { getUserIdFromToken } from "./FeedPosts";
+
+// Define the type of the user object
+type User = {
+  _id: string;
+  name: string;
+  bio?: string;
+  avatar?: string;
+};
 
 const RightSection = () => {
-  const [user, setUser] = useState<any>(null);
-  const [chats, setChats] = useState<any[]>([]);
   const [isSearchDialogOpen, setSearchDialogOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedChat, setSelectedChat] = useState<any>(null);
-  const [message, setMessage] = useState('');
-  const { sendMessage, listenForMessages } = useSocket(); // Use custom socket hook
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResult, setSearchResult] = useState<User[]>([]); // Correctly typed as an array of User objects
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]); // Correctly typed as an array of User objects
 
-  // Fetch user profile and chats
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) return toast.error('No token found.');
-        
-        // const userResponse = await axios.get('http://localhost:3000/v1/users/', {
-        //   headers: { Authorization: `Bearer ${token}` }
-        // });
-        // setUser(userResponse.data);
+  // Mock authenticated user (replace with real user auth logic)
+  const currentUserId = "current-user-id"; // You can replace this with real user data from your auth context or state
 
-        // Fetch chats
-        const chatResponse = await axios.get('http://localhost:3000/v1/chats/get-chats', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setChats(chatResponse.data);
-      } catch (error) {
-        toast.error('Failed to fetch user data.');
-      }
-    };
-    fetchData();
-  }, []);
-
-  // Handle user search for chat
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/v1/users/search/username?query=${searchQuery}`);
-      // Show search results in the dialog
-      console.log(response.data); // Show user profile info in the dialog results
+      const response = await axios.get(`http://localhost:3000/v1/users/search/username?name=${searchTerm}`);
+      if (response.data.users) {
+        setSearchResult(response.data.users); // Assuming the API returns an array of user objects
+      } else {
+        setSearchResult([]);
+      }
     } catch (error) {
-      toast.error('Search failed.');
+      setSearchResult([]);
+      toast.error("Search failed. Please try again.");
     }
   };
 
-  // Create a new chat
-  const createChat = async (userId: string) => {
+  const handleUserClick = async (user: User) => {
     try {
-      const response = await axios.post('http://localhost:3000/v1/chats/create-chat', { userId });
-      setChats([...chats, response.data]);
-      setSearchDialogOpen(false);
-    } catch (error) {
-      toast.error('Failed to create chat.');
-    }
-  };
-
-  // Send message in chat
-  const handleSendMessage = () => {
-    if (!message || !selectedChat) return;
-    sendMessage(selectedChat._id, message);
-    setMessage('');
-  };
-
-  // Listen for incoming messages
-  useEffect(() => {
-    if (selectedChat) {
-      const unsubscribe = listenForMessages((data) => {
-        if (data.chatId === selectedChat._id) {
-          // Update the selected chat with the new message
-          setSelectedChat((prevState: any) => ({
-            ...prevState,
-            messages: [...prevState.messages, data.message]
-          }));
+      const userId = getUserIdFromToken()
+      // Make a POST request to create the chat with the selected user
+      const response = await axios.post("http://localhost:3000/v1/chats/create-chat", {
+        users: [user._id, userId ], // Include the selected user in the chat
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}` // Assuming you store auth token in localStorage
         }
       });
 
-      // Cleanup the listener when the component unmounts or chat changes
-      return unsubscribe;
-    }
-  }, [selectedChat, listenForMessages]);
+      if (response.status === 201) {
+        toast.success(`Chat started with ${user.name}`);
+        setSelectedUsers((prevUsers) => [...prevUsers, user]); // Append the new user to the selectedUsers array
+        setSearchDialogOpen(false); // Close the search dialog
+      }
+    } catch (error:any) {
+      toast.error(`Failed to start the chat. Please try again. ${error.message}`);
+    } 
+  };
 
   return (
-    <div className="flex flex-col p-4">
-      {/* Chats section */}
-      <div className="flex flex-col">
-        <h2 className="text-xl font-semibold">Chats</h2>
-        <Button onClick={() => setSearchDialogOpen(true)} className="mt-2 bg-blue-500 text-white">
-         <IoSearch/> Search User
-        </Button>
+    <div className="p-4">
+      {/* Chats Heading */}
+      <h2 className="text-xl font-bold mb-4">Chats</h2>
 
-        {/* Display chats */}
-        <div className="mt-4">
-          {chats.map((chat) => (
-            <div
-              key={chat._id}
-              className="flex items-center p-2 border-b cursor-pointer"
-              onClick={() => setSelectedChat(chat)}
-            >
-              <img src={chat.avatar} alt="user" className="w-8 h-8 rounded-full" />
-              <div className="ml-2">
-                <p>{chat.name}</p>
-                {/* <p>{chat.messages[chat.messages?.length - 1]?.text}</p> */}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Search Button */}
+      <Button onClick={() => setSearchDialogOpen(true)} className="mb-4">
+        Search User
+      </Button>
 
-      {/* Chat dialog */}
+      {/* Search Dialog */}
       <Dialog open={isSearchDialogOpen} onOpenChange={setSearchDialogOpen}>
-        <DialogTrigger asChild>
-          <Button>Search User</Button>
-        </DialogTrigger>
-        <DialogContent>
+        <DialogTrigger asChild />
+        <DialogContent className="bg-white">
           <DialogHeader>
-            <DialogTitle>Search User</DialogTitle>
+            <DialogTitle>Search for a User</DialogTitle>
           </DialogHeader>
+
+          {/* Search Input */}
           <Input
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name"
+            type="text"
+            placeholder="Enter user name"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="mb-4"
           />
-          <Button onClick={handleSearch} className="mt-2">Search</Button>
-          <div className="mt-4">
-            {/* Render search results here */}
+
+          {/* Search Button */}
+          <Button onClick={handleSearch} className="mb-4 bg-blue-400">
+            Search
+          </Button>
+
+          {/* Search Result - Profile Card Display */}
+          <div className="grid gap-4">
+            {searchResult && searchResult.length > 0 ? (
+              searchResult.map((user: User) => (
+                <div
+                  key={user._id}
+                  className="flex items-center p-4 bg-gray-100 rounded-lg shadow-md cursor-pointer"
+                  onClick={() => handleUserClick(user)} // Click handler to select user and trigger chat creation
+                >
+                  {/* Profile Image */}
+                  <div className="w-12 h-12 mr-4">
+                    <img
+                      src={user.avatar || "/default-avatar.png"}
+                      alt="User Avatar"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  </div>
+
+                  {/* User Info */}
+                  <div>
+                    <h1 className="text-lg font-semibold">{user.name}</h1>
+                    <p className="text-gray-600 text-xs"> {user.bio || "Not available"}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No users found.</p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Chat box */}
-      {selectedChat && (
-        <div className="mt-4 p-4 border rounded">
-          <div className="flex items-center mb-2">
-            <img src={selectedChat.avatar} alt="user" className="w-10 h-10 rounded-full" />
-            <div className="ml-2">
-              <p>{selectedChat.name}</p>
-              <p>{selectedChat.bio}</p>
-            </div>
-          </div>
+      {/* Display Selected Users' Chats */}
+      {selectedUsers.length > 0 && selectedUsers.map((user, index) => (
+        <div key={user._id} className="p-4 min-h-[530px] bg-gray-100 rounded-lg mt-4">
+          <h3 className="text-lg font-semibold mb-2">Chat with {user.name}</h3>
+          <p className="text-gray-600 text-xs mb-4">{user.bio}</p>
 
-          {/* Display messages */}
-          <div className="overflow-y-auto h-48">
-            {selectedChat.messages.map((msg: any, index: number) => (
-              <div key={index} className="mb-2">
-                <p>{msg.text}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Message input */}
-          <div className="flex items-center mt-2">
+          {/* Chat Input */}
+          <div className="flex gap-2 items-end justify-end border-2 h-full">
             <Input
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Type a message"
+              type="text"
+              placeholder={`Send a message to ${user.name}`}
+              className=""
             />
-            <Button onClick={handleSendMessage} className="ml-2 bg-blue-500 text-white">Send</Button>
+            <Button className="bg-blue-400">Send</Button>
           </div>
         </div>
-      )}
+      ))}
     </div>
   );
 };
 
-
 export default RightSection;
+
