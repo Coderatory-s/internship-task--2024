@@ -1,0 +1,22 @@
+{
+    "level": "INFO",
+    "timestamp": "2024-10-07T09:38:18.300Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "test"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-10-07T09:38:18.315Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-10-07T09:38:18.317Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
