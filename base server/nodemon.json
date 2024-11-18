@@ -1,5 +1,0 @@
-{
-    "watch": ["src/bin/server.ts"],
-    "exec": "ts-node src/bin/server.ts",
-    "ext": "ts,js,json"
-  }
