@@ -89,21 +89,6 @@ export const commentOnPostRequest = async (
     throw error; // Handle the error by throwing it so it can be caught elsewhere
   }
 };
-export const fetchUserById = async (userId: string, token: string) => {
-  try {
-    const response = await axios.get(
-      `http://localhost:3000/v1/users/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add the token here
-        },
-      }
-    );
-    return response.data; // Return the actual data
-  } catch (error) {
-    throw new Error("Failed to fetch user details");
-  }
-};
 
 // Reply to comment API request
 export const replyToCommentRequest = async (

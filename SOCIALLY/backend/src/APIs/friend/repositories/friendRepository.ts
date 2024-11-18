@@ -1,20 +1,23 @@
-import { FriendRequest, IFriendRequest } from '../models/friendModel'
+import { Friend, IFriend } from '../models/friendModel'
 
-export const createFriendRequest = async (senderId: string, receiverId: string): Promise<IFriendRequest> => {
-    const request = new FriendRequest({ senderId, receiverId })
-    return await request.save()
+export const createFriendRequest = async (senderId: string, receiverId: string): Promise<IFriend> => {
+    return await Friend.create({ senderId, receiverId })
 }
 
-export const findFriendRequestById = async (requestId: string): Promise<IFriendRequest | null> => {
-    return await FriendRequest.findById(requestId)
+export const getFriendRequestById = async (requestId: string): Promise<IFriend | null> => {
+    return await Friend.findById(requestId)
 }
 
-export const updateFriendRequestStatus = async (requestId: string, status: 'accepted' | 'rejected'): Promise<IFriendRequest | null> => {
-    return await FriendRequest.findByIdAndUpdate(requestId, { status }, { new: true })
+export const updateFriendRequestStatus = async (requestId: string, status: 'accepted' | 'rejected'): Promise<IFriend | null> => {
+    return await Friend.findByIdAndUpdate(requestId, { status }, { new: true })
 }
 
-export const getFriendList = async (userId: string): Promise<IFriendRequest[]> => {
-    return await FriendRequest.find({
+export const getPendingFriendRequests = async (userId: string): Promise<IFriend[]> => {
+    return await Friend.find({ receiverId: userId, status: 'pending' })
+}
+
+export const getFriendsList = async (userId: string): Promise<IFriend[]> => {
+    return await Friend.find({
         $or: [
             { senderId: userId, status: 'accepted' },
             { receiverId: userId, status: 'accepted' }

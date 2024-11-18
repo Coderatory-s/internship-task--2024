@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+import axios from "axios";
 import {
   Select,
   SelectItem,
@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import {
   likePostRequest,
   commentOnPostRequest,
-  fetchUserById,
+  // fetchUserById,
   replyToCommentRequest,
   deleteCommentRequest,
   editCommentRequest,
@@ -39,7 +39,21 @@ export const PostActions = ({ post }: { post: IPost }) => {
   const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
 
   // const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
+  const fetchUserById = async (userId: string, token: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/v1/users/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token here
+          },
+        }
+      );
+      return response.data; // Return the actual data
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
   // Mutations for edit and delete
   const editCommentMutation = useMutation({
     mutationFn: ({
@@ -177,10 +191,11 @@ export const PostActions = ({ post }: { post: IPost }) => {
         return;
       }
 
+     
       for (const userId of userIds) {
         try {
           const userData = await fetchUserById(userId, token); // Pass both userId and token
-          users[userId] = userData.name;
+          users[userId] = userData?.name;
         } catch (error) {
           console.error("Error fetching user details:", error);
         }
@@ -211,7 +226,8 @@ export const PostActions = ({ post }: { post: IPost }) => {
       for (const userId of userIds) {
         try {
           const userData = await fetchUserById(userId, token); // Pass both userId and token
-          users[userId] = userData.name; // Store user name by their ID
+          console.log("userData",userData, "users",users)
+          users[userId] = userData?.name; // Store user name by their ID
         } catch (error) {
           console.error("Error fetching user details:", error);
         }

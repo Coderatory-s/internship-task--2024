@@ -22,7 +22,6 @@ router.post('/auth/login', login)
 router.get('/auth/logout', logout)
 router.get('/:id', authenticateToken, getUserById) // Add this route for fetching a user by ID
 
-// router.put('/users/profile', authenticateToken, updateProfile) // Protect this route
 router.get('/', authenticateToken, getProfile)
 router.put('/profile', authenticateToken, upload, updateProfile)
 router.delete('/profile', authenticateToken, deleteUser)

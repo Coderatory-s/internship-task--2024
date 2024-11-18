@@ -35,116 +35,6 @@ const upload = multer({
     { name: 'voice', maxCount: 1 } // Single voice file
 ])
 
-// export const createPost = async (req: any, res: any) => {
-//     try {
-//         // Handle file upload using multer
-//         upload(req, res, async (err) => {
-//             if (err) {
-//                 return res.status(500).json({ message: 'Error uploading files', error: err.message })
-//             }
-
-//             // Arrays to store uploaded URLs
-//             const uploadedImages: string[] = []
-//             const uploadedVideos: string[] = []
-//             const uploadedDocuments: string[] = []
-//             let uploadedVoice: string | null = null
-
-//             // Upload images to Cloudinary
-//             if (req.files.images) {
-//                 for (const image of req.files.images) {
-//                     const result = await Cloudinary.uploader.upload(image.path, {
-//                         resource_type: 'image',
-//                         folder: 'social_media_posts/images'
-//                     })
-//                     uploadedImages.push(result.secure_url)
-//                     fs.unlinkSync(image.path) // Delete the local temporary file
-//                 }
-//             }
-
-//             // Upload videos to Cloudinary
-//             if (req.files.videos) {
-//                 for (const video of req.files.videos) {
-//                     const result = await Cloudinary.uploader.upload(video.path, {
-//                         resource_type: 'video',
-//                         folder: 'social_media_posts/videos',
-//                         format: 'mp4'
-//                     })
-//                     uploadedVideos.push(result.secure_url)
-//                     fs.unlinkSync(video.path) // Delete the local temporary file
-//                 }
-//             }
-
-//             // Upload documents to Cloudinary
-//             if (req.files.documents) {
-//                 for (const document of req.files.documents) {
-//                     const result = await Cloudinary.uploader.upload(document.path, {
-//                         resource_type: 'raw', // 'raw' is used for documents like PDFs, Word files, etc.
-//                         folder: 'social_media_posts/documents'
-//                     })
-//                     uploadedDocuments.push(result.secure_url)
-//                     fs.unlinkSync(document.path) // Delete the local temporary file
-//                 }
-//             }
-
-//             // Upload voice file to Cloudinary
-//             if (req.files.voice && req.files.voice[0]) {
-//                 const voiceFile = req.files.voice[0]
-//                 const result = await Cloudinary.uploader.upload(voiceFile.path, {
-//                     resource_type: 'video', // Cloudinary treats audio as 'video'
-//                     folder: 'social_media_posts/voice',
-//                     format: 'mp3'
-//                 })
-//                 uploadedVoice = result.secure_url
-//                 fs.unlinkSync(voiceFile.path) // Delete the local temporary file
-//             }
-
-//             // Poll data (optional)
-//             let pollData = null
-//             if (req.body.pollQuestion && req.body.pollOptions) {
-//                 const pollOptions = JSON.parse(req.body.pollOptions) // Expecting an array of options in the request body
-//                 const pollVotes = Array(pollOptions.length).fill(0) // Initialize vote count to 0 for each option
-//                 pollData = {
-//                     question: req.body.pollQuestion,
-//                     options: pollOptions,
-//                     votes: pollVotes
-//                 }
-//             }
-
-//             // Add user name to the post data (assuming the user's name is in req.user.name)
-//             const userName = req.user ? req.user.name : 'Anonymous' // Default to 'Anonymous' if no user is authenticated
-
-//             // Create post data with the uploaded URLs, poll data (if provided), and user name
-//             const postData = {
-//                 title: req.body.title,
-//                 content: {
-//                     text: req.body.text,
-//                     images: uploadedImages,
-//                     videos: uploadedVideos,
-//                     documents: uploadedDocuments,
-//                     voice: uploadedVoice,
-//                     poll: pollData
-//                 },
-//                 likes: 0,
-//                 comments: [],
-//                 likedBy: [],
-//                 user: userName // Add the user’s name here
-//             }
-
-//             // Save the post to the database
-//             const post = new Post(postData)
-//             await post.save()
-
-//             // Respond with the created post
-//             return res.status(201).json(post)
-//         })
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             return res.status(500).json({ message: error.message })
-//         } else {
-//             return res.status(500).json({ message: 'An unknown error occurred' })
-//         }
-//     }
-// }
 export const createPost = async (req: any, res: any) => {
     try {
         upload(req, res, async (err) => {
@@ -296,22 +186,6 @@ export const getPostById = async (req: Request, res: Response) => {
     }
 }
 
-// export const updatePost = async (req: Request, res: Response) => {
-//     try {
-//         const post = await postService.updatePost(req.params.id, req.body)
-//         if (post) {
-//             res.status(200).json(post)
-//         } else {
-//             res.status(404).json({ message: 'Post not found' })
-//         }
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             res.status(500).json({ message: error.message })
-//         } else {
-//             res.status(500).json({ message: 'An unknown error occurred' })
-//         }
-//     }
-// }
 export const updatePost = async (req: any, res: any) => {
     try {
         const postId = req.params.id // Extract post ID from URL params
@@ -391,35 +265,6 @@ export const likePost = async (req: any, res: any) => {
         res.status(500).json({ message: error?.message })
     }
 }
-
-// export const commentOnPost = async (req: Request, res: Response) => {
-//     try {
-//         const { userId, comment, type, opinion } = req.body
-
-//         // Set default values if not provided
-//         const commentType = type || 'text' // Default to 'text'
-//         const commentOpinion = opinion || 'neutral' // Default to 'neutral'
-
-//         const post = await postService.commentOnPost(req.params.id, {
-//             userId,
-//             comment,
-//             type: commentType,
-//             opinion: commentOpinion
-//         })
-
-//         if (post) {
-//             res.status(200).json(post)
-//         } else {
-//             res.status(404).json({ message: 'Post not found' })
-//         }
-//     } catch (error: unknown) {
-//         if (error instanceof Error) {
-//             res.status(500).json({ message: error.message })
-//         } else {
-//             res.status(500).json({ message: 'An unknown error occurred' })
-//         }
-//     }
-// }
 
 export const commentOnPost = async (req: any, res: any) => {
     try {

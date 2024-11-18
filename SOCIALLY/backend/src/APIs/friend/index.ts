@@ -3,16 +3,20 @@ import {
     sendFriendRequestController,
     acceptFriendRequestController,
     rejectFriendRequestController,
-    getFriendsListController
+    getPendingRequestsController,
+    cancelFriendRequestController,
+    getFriendsByUserIdController
 } from './controllers/friendController'
-import { validateSendRequest, validateRequestAction } from './validations/friendValidation'
+import { sendFriendRequestValidation, requestActionValidation } from './validations/friendValidation'
 import { authenticateToken } from '../user/middlewares/authMiddleware'
-
 const router = Router()
 
-router.post('/request', validateSendRequest, sendFriendRequestController)
-router.post('/accept', validateRequestAction, acceptFriendRequestController)
-router.post('/reject', validateRequestAction, rejectFriendRequestController)
-router.get('/list', authenticateToken, getFriendsListController)
+router.post('/request', sendFriendRequestValidation, sendFriendRequestController)
+router.post('/accept', authenticateToken, requestActionValidation, acceptFriendRequestController)
+router.post('/reject', requestActionValidation, rejectFriendRequestController)
+router.get('/pending', authenticateToken, getPendingRequestsController)
+router.get('/list/:id', authenticateToken, getFriendsByUserIdController)
+
+router.post('/cancel-request', authenticateToken, cancelFriendRequestController)
 
 export default router

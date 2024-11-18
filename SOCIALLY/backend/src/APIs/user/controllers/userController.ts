@@ -13,23 +13,11 @@ import { searchUsers } from '../services/userService'
 import cloudinary from '../../../config/cloudinaryConfig' // Path to your cloudinaryConfig file
 import { UserModel } from '../models/userModel'
 import config from '../../../config/config'
-// import { searchUsersByName } from '../services/userService'
 
-// import { CustomRequest } from '../middlewares/authMiddleware' // Adjust based on your project structure
-// Extend the Request interface to include user property
 interface CustomRequest extends Request {
     user?: { _id: string | jwt.JwtPayload } // Assuming the user contains an ID or a JWT payload
 }
 
-// export const searchUser = async (req: Request, res: Response) => {
-//     try {
-//         const { name } = req.query
-//         const users = await searchUsersByName(name as string)
-//         res.status(200).json({ users })
-//     } catch (error: any) {
-//         res.status(500).json({ message: error?.message })
-//     }
-// }
 export const searchUser = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { name } = req.query
@@ -108,26 +96,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         return res.status(400).json({ message: error.message })
     }
 }
-// export const getProfile = async (req: any, res: any) => {
-//     try {
-//         console.log('User in request:', req.user) // Log req.user to inspect the structure
 
-//         const userId = req.user?._id // Assuming the user ID is stored in _id
-//         if (!userId) {
-//             return res.status(400).json({ message: 'User ID not found in token' })
-//         }
-
-//         const user = await UserModel.findById(userId) // Query by the correct ObjectId
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' })
-//         }
-
-//         res.status(200).json(user)
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500).json({ message: 'Server error', error })
-//     }
-// }
 export const getProfile = async (req: any, res: any) => {
     try {
         console.log('User in request:', req.user) // Log req.user to ensure it contains the correct _id
@@ -149,73 +118,6 @@ export const getProfile = async (req: any, res: any) => {
     }
 }
 
-// export const getProfile = async (req: any, res: any) => {
-//     try {
-//         const userId = req.user?._id // Make sure the user ID is being extracted from the token
-
-//         if (!userId) {
-//             return res.status(400).json({ message: 'User ID not found in token' })
-//         }
-
-//         const user = await UserModel.findById(userId) // Query by the correct ObjectId
-
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' })
-//         }
-
-//         res.status(200).json(user)
-//     } catch (error) {
-//         // console.error(error)
-//         res.status(500).json({ message: 'Server error', error })
-//     }
-// }
-
-// export const getProfile = async (req: CustomRequest, res: Response): Promise<Response> => {
-//     try {
-//         // Ensure req.user is a decoded JWT object
-//         const user = req.user as jwt.JwtPayload // Explicitly cast req.user to jwt.JwtPayload
-
-//         // Check if the user is authenticated and req.user contains _id
-//         if (!user || !user._id) {
-//             return res.status(401).json({ message: 'Unauthorized' })
-//         }
-
-//         // Extract userId from the token payload (_id)
-//         const userId = user._id
-
-//         // Fetch the user profile from the database using userId
-//         const fetchedUser = await UserModel.findById(userId).select('-password') // Exclude password field
-
-//         if (!fetchedUser) {
-//             return res.status(404).json({ message: 'User not found' })
-//         }
-
-//         return res.status(200).json(fetchedUser) // Return the user profile
-//     } catch (error: any) {
-//         return res.status(500).json({ message: `sjhkdhask ${error.message}` })
-//     }
-// }
-// export const getProfile = async (req: any, res: any) => {
-//     try {
-//         // Assuming the user ID is attached to the req.user after token authentication
-//         const userId = req.user?._id // This should come from your authentication middleware
-
-//         if (!userId) {
-//             return res.status(400).json({ message: 'User ID not found in token' })
-//         }
-
-//         const user = await UserModel.findById(userId)
-
-//         if (!user) {
-//             return res.status(404).json({ message: 'User not found' })
-//         }
-
-//         res.status(200).json(user)
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500).json({ message: 'Server error', error })
-//     }
-// }
 export const getUserById = async (req: Request, res: Response) => {
     const userId = req.params.id
     try {
@@ -277,56 +179,6 @@ export const updateProfile = async (req: CustomRequest, res: Response): Promise<
         return res.status(500).json({ message: 'An error occurred while updating the profile' })
     }
 }
-// export const updateProfile = async (req: CustomRequest, res: Response): Promise<Response> => {
-//     try {
-//         const userId = req.user?._id
-//         console.log('Update profile user ID:', userId)
-
-//         if (!userId) {
-//             return res.status(401).json({ message: 'Unauthorized access' })
-//         }
-
-//         // Validate the incoming request data
-//         const { error } = profileUpdateValidation.validate(req.body)
-//         if (error) {
-//             return res.status(400).json({ message: error.details[0].message })
-//         }
-
-//         // Extract user details from the request body
-//         const { name, bio } = req.body
-
-//         // Build the updated data object
-//         const updatedData: any = {
-//             name,
-//             bio
-//         }
-
-//         // Check if the user has uploaded a new avatar
-//         if (req.file) {
-//             updatedData.avatar = req.file.path // Assuming you're using a middleware like `multer` for file uploads
-//         }
-
-//         // Handle optional password update
-//         // if (password) {
-//         //     updatedData.password = await UserModel.hashPassword(password) // Assuming you have a method to hash passwords
-//         // }
-
-//         // Find the user and update the profile
-//         const updatedUser = await UserModel.findByIdAndUpdate(userId, updatedData, { new: true })
-
-//         if (!updatedUser) {
-//             return res.status(404).json({ message: 'User not found' })
-//         }
-
-//         return res.status(200).json({
-//             message: 'Profile updated successfully',
-//             user: updatedUser
-//         })
-//     } catch (error: any) {
-//         console.error('Error updating profile:', error.message)
-//         return res.status(500).json({ message: 'Server error, please try again later' })
-//     }
-// }
 
 // Logout
 export const logout = async (_: Request, res: Response): Promise<Response> => {

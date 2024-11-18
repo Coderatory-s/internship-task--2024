@@ -29,7 +29,16 @@ const Feed = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const clearToken = useAuthStore((state) => state.clearToken);
   const router = useRouter();
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResult, setSearchResult] = useState<User[]>([]);
+  type User = {
+    _id: string;
+    name: string;
+    bio?: string;
+    avatar?: string;
+  };
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -103,6 +112,47 @@ const Feed = () => {
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/v1/users/search/username?name=${searchTerm}`
+      );
+      if (response.data.users) {
+        setSearchResult(response.data.users); // Assuming the API returns an array of user objects
+      } else {
+        setSearchResult([]);
+      }
+    } catch (error) {
+      setSearchResult([]);
+      toast.error("Search failed. Please try again.");
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No token found. Please log in.");
+        return;
+      }
+
+      await axios.delete("http://localhost:3000/v1/users/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Clear token and redirect to login page
+      clearToken();
+      localStorage.removeItem("token");
+      router.push("/login");
+      toast.success("Profile deleted successfully!");
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message || "Failed to delete profile."
+      );
+    }
+  };
 
   return (
     <ProtectedRoute>
@@ -121,9 +171,14 @@ const Feed = () => {
             <Input
               type="text"
               placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="p-2 text-white focus:outline-dashed border-none w-[340px] rounded-none "
             />
-            <Button className="text-white rounded-none border-l-2">
+            <Button
+              onClick={() => handleSearch}
+              className="text-white rounded-none border-l-2"
+            >
               <IoSearch />
             </Button>
           </div>
@@ -146,6 +201,7 @@ const Feed = () => {
             </button>
 
             {/* Dropdown menu inside Dialog */}
+
             <Dialog open={isDropdownOpen} onOpenChange={setDropdownOpen}>
               <DialogTrigger asChild />
               <DialogContent className="absolute right-0 mt-2 w-9 bg-white text-black rounded-md shadow-md z-[9999]">
@@ -165,7 +221,10 @@ const Feed = () => {
                     Update Profile
                   </Button>
                   <Button
-                    onClick={() => {}}
+                    onClick={() => {
+                      setDeleteDialogOpen(true);
+                      toggleDropdown();
+                    }}
                     className="w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
                     Delete Profile
@@ -200,18 +259,6 @@ const Feed = () => {
                   href="/friends"
                 >
                   Friends
-                </Link>
-                <Link
-                  className="hover:bg-blue-200 p-3 border-b-[1px]  border-gray-400"
-                  href="/groups"
-                >
-                  Groups
-                </Link>
-                <Link
-                  className="hover:bg-blue-200 p-3 border-b-[1px]  border-gray-400"
-                  href="/communities"
-                >
-                  Communities
                 </Link>
               </ul>
             </nav>
@@ -296,7 +343,36 @@ const Feed = () => {
             <RightSection />
           </div>
         </div>
-
+        {/* {} */}
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogTrigger asChild />
+          <DialogContent className="bg-red-500 text-white">
+            <DialogHeader>
+              <DialogTitle className="underline">
+                Confirm Profile Deletion
+              </DialogTitle>
+            </DialogHeader>
+            <DialogDescription className="text-lg">
+              Are you sure you want to delete your profile? This action is
+              irreversible.
+            </DialogDescription>
+            <DialogFooter>
+              <Button
+                className="bg-red-700 text-white"
+                onClick={handleDeleteProfile}
+              >
+                Confirm
+              </Button>
+              <Button
+                variant="outline"
+                className="bg-gray-200 text-black"
+                onClick={() => setDeleteDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         {/* Logout Confirmation Dialog */}
         <Dialog open={isLogoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
           <DialogTrigger asChild />
