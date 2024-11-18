@@ -1,0 +1,79 @@
+/* src/app/register/Register.module.css */
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f3f4f6, #e2e8f0);
+  padding: 20px;
+}
+
+.form {
+  background-color: white;
+  padding: 35px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2d3748; /* Dark gray */
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #4a5568; /* Medium gray */
+}
+
+.input {
+  border: 1px solid #cbd5e0; /* Light gray */
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+
+.input:focus {
+  border-color: #63b3ed; /* Blue */
+  outline: none;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.checkbox input {
+  margin-right: 8px;
+}
+
+.button {
+  width: 100%;
+  background-color: #3182ce; /* Blue */
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #2b6cb0; /* Darker blue */
+}
+
+.button:focus {
+  outline: none;
+}

@@ -1,0 +1,20 @@
+/* app/CSS/header.module.css */
+
+.header {
+  background-color: #36383a; /* Blue background color */
+  color: white; /* White text color */
+  padding: 20px; /* Padding around the header */
+  text-align: center; /* Center the text */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+.header h1 {
+  margin: 0; /* Remove default margin for the header */
+  font-size: 1.8em; /* Increase font size for the header */
+}
+
+.header p {
+  margin: 5px 0 0; /* Margin for the paragraph */
+  font-size: 1.2em; /* Slightly larger font size for the paragraph */
+}

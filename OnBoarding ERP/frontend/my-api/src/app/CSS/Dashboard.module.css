@@ -1,0 +1,45 @@
+.dashboard {
+  display: flex; /* Use flexbox for layout */
+  height: 100vh; /* Full height for the dashboard */
+  background-color: #f4f4f4; /* Light background for contrast */
+}
+
+.mainContent {
+  flex: 1; /* Allow main content to take the available space */
+  padding: 20px; /* Padding around the main content */
+  background-color: #aaa7a7; /* White background for the main area */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 8px; /* Rounded corners */
+  overflow-y: auto; /* Scrollable if content overflows */
+}
+
+.hoo {
+  font-size: 24px; /* Size of the heading */
+  color: #333; /* Dark text color for readability */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+.yoo {
+  list-style-type: none; /* Remove default bullet points */
+  padding: 0; /* Remove default padding */
+}
+
+.io {
+  background: #f9f9f9; /* Light background for each employee */
+  border: 1px solid #ddd; /* Light border around employee details */
+  border-radius: 5px; /* Rounded corners */
+  padding: 15px; /* Padding inside each employee box */
+  margin-bottom: 10px; /* Space between employee items */
+  transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+.io:hover {
+  background-color: #e2f0d9; /* Change background on hover for interactivity */
+}
+
+.error {
+  color: red; /* Red color for error messages */
+  font-weight: bold; /* Make error messages bold */
+}
+
+/* Additional styles for Sidebar and Header if needed */
