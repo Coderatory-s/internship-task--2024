@@ -145274,3 +145274,69 @@
         "SERVER_URL": "http://localhost:3000"
     }
 }
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:28:47.614Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:28:47.632Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:28:47.636Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:47:55.714Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:47:55.736Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-17T18:47:55.741Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:18:07.304Z",
+    "message": "Database connection established",
+    "meta": {
+        "CONNECTION_NAME": "sm-chat-app"
+    }
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:18:07.328Z",
+    "message": "Rate limiter initiated",
+    "meta": {}
+}
+{
+    "level": "INFO",
+    "timestamp": "2024-11-18T00:18:07.332Z",
+    "message": "Application started on port 3000",
+    "meta": {
+        "SERVER_URL": "http://localhost:3000"
+    }
+}

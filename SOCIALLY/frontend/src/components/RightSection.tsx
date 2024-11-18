@@ -2970,10 +2970,10 @@ const RightSection = () => {
         const token = localStorage.getItem('token');
         if (!token) return toast.error('No token found.');
         
-        const userResponse = await axios.get('http://localhost:3000/v1/users/', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setUser(userResponse.data);
+        // const userResponse = await axios.get('http://localhost:3000/v1/users/', {
+        //   headers: { Authorization: `Bearer ${token}` }
+        // });
+        // setUser(userResponse.data);
 
         // Fetch chats
         const chatResponse = await axios.get('http://localhost:3000/v1/chats/get-chats', {
@@ -2990,7 +2990,7 @@ const RightSection = () => {
   // Handle user search for chat
   const handleSearch = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/v1/users/search?query=${searchQuery}`);
+      const response = await axios.get(`http://localhost:3000/v1/users/search/username?query=${searchQuery}`);
       // Show search results in the dialog
       console.log(response.data); // Show user profile info in the dialog results
     } catch (error) {
@@ -3054,7 +3054,7 @@ const RightSection = () => {
               <img src={chat.avatar} alt="user" className="w-8 h-8 rounded-full" />
               <div className="ml-2">
                 <p>{chat.name}</p>
-                <p>{chat.messages[chat.messages.length - 1]?.text}</p>
+                {/* <p>{chat.messages[chat.messages?.length - 1]?.text}</p> */}
               </div>
             </div>
           ))}
